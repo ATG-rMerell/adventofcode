@@ -8,56 +8,6 @@ fun main() {
     secondStar(input)
 }
 
-fun secondStar(input: List<String>) {
-    val data = getData(input)
-
-    val oxygen = calculateOxygen(input.toMutableList(), data)
-    val co2 = calculateCo2(input.toMutableList(), data )
-
-    println(oxygen)
-    println(co2)
-    println(oxygen.times(co2))
-}
-
-fun calculateOxygen(input: MutableList<String>, data: MutableMap<Int, Int>, position: Int = 0): Int {
-    if (input.size == 1) {
-        return input.first().toInt(2)
-    }
-
-    if (data[position]!! >= 0) {
-        removeValues(input, position, "0")
-    } else {
-        removeValues(input, position, "1")
-    }
-
-    return calculateOxygen(input, getData(input), position + 1)
-}
-
-fun calculateCo2(input: MutableList<String>, data: MutableMap<Int, Int>, position: Int = 0): Int {
-    if (input.size == 1) {
-        return input.first().toInt(2)
-    }
-
-    if (data[position]!! >= 0) {
-        removeValues(input, position, "1")
-    } else {
-        removeValues(input, position, "0")
-    }
-
-    return calculateCo2(input, getData(input), position + 1)
-}
-
-fun getData(input: List<String>): MutableMap<Int, Int> {
-    val data = mutableMapOf<Int, Int>()
-    return input.map { it.mapIndexed { i, c -> i to c.toString() } }
-        .flatten()
-        .associateByTo(data, keySelector = { it.first }, valueTransform = { getValue(data, it) })
-}
-
-fun removeValues(input: MutableList<String>, position: Int, bit: String) {
-    input.removeIf { it[position].toString() == bit }
-}
-
 fun firstStar(input: List<String>) {
     val data = mutableMapOf<Int, Int>()
     val binary = input.map { it.mapIndexed { i, c -> i to c.toString() } }
@@ -80,4 +30,34 @@ fun getValue(i: MutableMap<Int, Int>, pair: Pair<Int, String>): Int {
     } else {
         value
     }
+}
+
+fun secondStar(input: List<String>) {
+    val data = getData(input)
+
+    val oxygen = calculate(input.toMutableList(), data, "0", "1")
+    val co2 = calculate(input.toMutableList(), data, "1", "0")
+
+    println(oxygen.times(co2))
+}
+
+fun calculate(input: MutableList<String>, data: MutableMap<Int, Int>, bit1: String, bit2:String, position: Int = 0): Int {
+    if (input.size == 1) {
+        return input.first().toInt(2)
+    }
+
+    if (data[position]!! >= 0) {
+        input.removeIf { it[position].toString() == bit1 }
+    } else {
+        input.removeIf { it[position].toString() == bit2 }
+    }
+
+    return calculate(input, getData(input), bit1, bit2, position + 1)
+}
+
+fun getData(input: List<String>): MutableMap<Int, Int> {
+    val data = mutableMapOf<Int, Int>()
+    return input.map { it.mapIndexed { i, c -> i to c.toString() } }
+        .flatten()
+        .associateByTo(data, keySelector = { it.first }, valueTransform = { getValue(data, it) })
 }
