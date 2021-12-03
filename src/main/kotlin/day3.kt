@@ -9,10 +9,7 @@ fun main() {
 }
 
 fun firstStar(input: List<String>) {
-    val data = mutableMapOf<Int, Int>()
-    val binary = input.map { it.mapIndexed { i, c -> i to c.toString() } }
-        .flatten()
-        .associateByTo(data, keySelector = { it.first }, valueTransform = { getValue(data, it) })
+    val binary = getData(input)
         .mapValues { if (it.value > 0) 1 else 0 }
         .values.joinToString("")
 
