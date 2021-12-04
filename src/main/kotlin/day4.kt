@@ -7,26 +7,48 @@ fun main() {
     val numbers = getNumbers(input)
     val boards = getBoards(input.subList(2, input.size))
     println(getWinner(numbers, boards))
+    println(getLoser(numbers, boards))
 }
 
-fun calculateStar1(board: MutableList<MutableList<String>>, n: Int): Int {
+fun calculateResult(board: MutableList<MutableList<String>>, n: Int): Int {
     val leftovers = board.flatten().map { it.toInt() }.distinct().toMutableList()
     leftovers.removeAll { it == n }
     val sum = leftovers.reduce { a, b -> a + b }
     return sum*n
 }
 
-fun getWinner(numbers: List<String>, boards: MutableMap<Int, MutableList<MutableList<String>>>): Int {
-    val nu = mutableListOf<String>()
+fun getLoser(numbers: List<String>, boards: MutableMap<Int, MutableList<MutableList<String>>>): Int {
+    val resultBoard = mutableMapOf<Int, MutableList<MutableList<String>>>()
+    resultBoard.putAll(boards)
+
     for (n in numbers) {
-        nu.add(n)
+        for (b in boards) {
+            for (r in b.value) {
+                if (r.contains(n)) {
+                    r.removeAll { i -> i == n }
+                }
+                if (r.isEmpty()) {
+                    resultBoard.remove(b.key)
+                    if (resultBoard.isEmpty()) {
+                        return calculateResult(b.value, n.toInt())
+                    }
+                }
+            }
+        }
+    }
+
+    return 0
+}
+
+fun getWinner(numbers: List<String>, boards: MutableMap<Int, MutableList<MutableList<String>>>): Int {
+    for (n in numbers) {
         for (b in boards) {
             b.value.forEach {
                 if (it.contains(n)) {
                     it.removeAll { i -> i == n }
                 }
                 if (it.isEmpty()) {
-                    return calculateStar1(b.value, n.toInt())
+                    return calculateResult(b.value, n.toInt())
                 }
             }
         }
