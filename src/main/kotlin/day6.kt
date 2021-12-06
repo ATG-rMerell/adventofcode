@@ -6,34 +6,26 @@ fun main() {
         .map { row -> row.split(",").map { it.toInt() } }
         .first()
 
-    val data = mapData(input)
-    println(star1(data.toMutableMap(), 0))
+    println(star1(input, 0))
 }
 
-fun mapData(input: List<Int>): Map<Int, Int> {
-    return input.mapIndexed { i, v -> i to v }.toMap()
-}
-
-fun star1(input: MutableMap<Int, Int>, day: Int): Int {
+fun star1(input: List<Int>, day: Int): Int {
     if (day == 80) {
         return input.size
     }
 
-    var max = input.maxByOrNull { it.key }!!.key
-    val temp = mutableMapOf<Int, Int>()
+    val temp = mutableListOf<Int>()
+    temp.addAll(input)
 
-    for (i in input) {
-        if (i.value == 0) {
-            max = max.plus(1)
-            temp[max] = 8
-            input[i.key] = 6
+    for ((i, v) in input.withIndex()) {
+        if (v == 0) {
+            temp.add(8)
+            temp[i] = 6
         } else {
-            val value = input.getValue(i.key)
-            input[i.key] = value - 1
+            temp[i] = temp[i].minus(1)
         }
     }
 
-    input.putAll(temp)
-    return star1(input, day + 1)
+    return star1(temp, day + 1)
 }
 
