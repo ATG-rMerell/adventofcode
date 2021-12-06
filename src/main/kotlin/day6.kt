@@ -14,16 +14,20 @@ fun calculate(input: List<Int>, days: Int): Long {
     var eachCount = input.groupingBy { it }.eachCount().mapValues { it.value.toLong() }
 
     for (i in 1..days) {
-        eachCount = eachCount.keys.flatMap {
-            if(it == 0) {
-                listOf(6 to eachCount[it], 8 to eachCount[it])
+        val data = mutableListOf<Pair<Int, Long>>()
+        for (k in eachCount.keys) {
+            if (k == 0) {
+                data.add(Pair(6, eachCount[k]!!))
+                data.add(Pair(8, eachCount[k]!!))
             } else {
-                listOf((it -1) to eachCount[it])
+                data.add(Pair(k - 1, eachCount[k]!!))
             }
-        }.groupBy { it.first }
-            .mapValues {
-                it.value.mapNotNull { it.second  }.sum()
-            }
+        }
+
+        eachCount = data.groupBy { it.first }
+            .mapValues { it.value.sumOf { it.second } }
     }
+    
     return eachCount.values.sum()
+
 }
