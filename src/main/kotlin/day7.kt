@@ -23,8 +23,7 @@ fun day7Star1(input: List<Int>, max: Int): Int {
 fun day7Star2(input: List<Int>, max: Int): Int {
     return (1..max).map { x ->
         input.sumOf {
-            val steps = abs(it - x)
-            (1..steps).sumOf { it }
+            (1..abs(it - x)).sumOf { it }
         }
     }.minOrNull() ?: 0
 }
