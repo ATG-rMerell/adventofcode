@@ -7,13 +7,24 @@ fun main() {
         .map { row -> row.split(",").map { it.toInt() } }
         .first()
 
-    println(day7Star1(input))
+    val max = input.maxOrNull()!!
+    println(day7Star1(input, max))
+    println(day7Star2(input, max))
 }
 
-fun day7Star1(input: List<Int>): Int {
-    return input.map { x ->
+fun day7Star1(input: List<Int>, max: Int): Int {
+    return (1..max).map { x ->
         input.sumOf {
             abs(it - x)
+        }
+    }.minOrNull() ?: 0
+}
+
+fun day7Star2(input: List<Int>, max: Int): Int {
+    return (1..max).map { x ->
+        input.sumOf {
+            val steps = abs(it - x)
+            (1..steps).sumOf { it }
         }
     }.minOrNull() ?: 0
 }
