@@ -16,7 +16,7 @@ fun day9Star1(list: List<List<Int>>): Int {
             val left = if (ii == 0) Int.MAX_VALUE else l[ii - 1]
             val right = if (ii == l.lastIndex) Int.MAX_VALUE else l[ii + 1]
 
-            if (listOf(above, below, left, right).all { it>value }) value+1 else 0
+            if (listOf(above, below, left, right).all { it > value }) value + 1 else 0
         }
     }.flatten().sum()
 }
