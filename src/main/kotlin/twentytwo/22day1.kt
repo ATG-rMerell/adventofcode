@@ -6,7 +6,7 @@ fun main() {
     val numbers = File("src/main/resources/twentytwo/aoc1.txt")
         .readLines()
 
-    //first(numbers)
+    first(numbers)
     second(numbers)
 }
 
